@@ -24,7 +24,6 @@ const colors = {
   bg: "#0B0B0F",
   bgAlt: "#111118",
   neonRed: "#FF0033",
-  neonRedGlow: "#FF0033",
   cyan: "#00F0FF",
   white: "#FFFFFF",
   gray: "#8D99AE",
