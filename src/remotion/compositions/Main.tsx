@@ -7,6 +7,8 @@ import {
   Easing,
   spring,
   Img,
+  Audio,
+  Sequence,
 } from "remotion";
 import { TextAnimation } from "../library/components/text/TextAnimation";
 import { Glow } from "../library/components/effects/Glow";
@@ -27,6 +29,15 @@ const colors = {
   white: "#FFFFFF",
   gray: "#8D99AE",
   darkGray: "#2B2D42",
+};
+
+// ===== SOUND EFFECTS =====
+const sfx = {
+  whoosh: "https://cdn.revid.ai/sound-effects/fast-whoosh.wav",
+  bellBoom: "https://cdn.revid.ai/sound-effects/bell-boom.wav",
+  fxSwipe: "https://cdn.revid.ai/sound-effects/fx-swipe.wav",
+  magicSlice: "https://cdn.revid.ai/sound-effects/magic-slice.wav",
+  pop: "https://cdn.revid.ai/sound-effects/pop.wav",
 };
 
 // ===== FLOATING PARTICLES COMPONENT =====
@@ -338,6 +349,38 @@ export const Main: React.FC = () => {
       {frame === 0 && (
         <Artifact content={Artifact.Thumbnail} filename="thumbnail.jpeg" />
       )}
+
+      {/* ===== SOUND EFFECTS ===== */}
+      {/* Logo reveal whoosh */}
+      <Sequence from={LOGO_REVEAL_START - 5}>
+        <Audio src={sfx.whoosh} volume={0.6} />
+      </Sequence>
+
+      {/* Neon frame power-on */}
+      <Sequence from={NEON_DRAW_START}>
+        <Audio src={sfx.fxSwipe} volume={0.5} />
+      </Sequence>
+
+      {/* Title reveal impact */}
+      <Sequence from={TITLE_START}>
+        <Audio src={sfx.bellBoom} volume={0.4} />
+      </Sequence>
+
+      {/* Features pop in */}
+      <Sequence from={FEATURES_START}>
+        <Audio src={sfx.pop} volume={0.3} />
+      </Sequence>
+      <Sequence from={FEATURES_START + 5}>
+        <Audio src={sfx.pop} volume={0.3} />
+      </Sequence>
+      <Sequence from={FEATURES_START + 9}>
+        <Audio src={sfx.pop} volume={0.3} />
+      </Sequence>
+
+      {/* API badge slice */}
+      <Sequence from={FEATURES_START + 45}>
+        <Audio src={sfx.magicSlice} volume={0.35} />
+      </Sequence>
 
       <AbsoluteFill
         style={{ backgroundColor: colors.bg, opacity: outroOpacity }}
