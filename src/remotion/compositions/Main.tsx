@@ -368,28 +368,28 @@ export const Main: React.FC = () => {
 
       {/* Neon frame power-on */}
       <Sequence from={NEON_DRAW_START}>
-        <Audio src={sfx.fxSwipe} volume={0.5} />
+        <Audio src={sfx.neonPowerOn} volume={0.5} />
       </Sequence>
 
       {/* Title reveal impact */}
       <Sequence from={TITLE_START}>
-        <Audio src={sfx.bellBoom} volume={0.4} />
+        <Audio src={sfx.impact} volume={0.4} />
       </Sequence>
 
       {/* Features pop in */}
       <Sequence from={FEATURES_START}>
-        <Audio src={sfx.pop} volume={0.3} />
+        <Audio src={sfx.blip} volume={0.3} />
       </Sequence>
       <Sequence from={FEATURES_START + 5}>
-        <Audio src={sfx.pop} volume={0.3} />
+        <Audio src={sfx.blip} volume={0.3} />
       </Sequence>
       <Sequence from={FEATURES_START + 9}>
-        <Audio src={sfx.pop} volume={0.3} />
+        <Audio src={sfx.blip} volume={0.3} />
       </Sequence>
 
       {/* API badge slice */}
       <Sequence from={FEATURES_START + 45}>
-        <Audio src={sfx.magicSlice} volume={0.35} />
+        <Audio src={sfx.slideIn} volume={0.35} />
       </Sequence>
 
       <AbsoluteFill
