@@ -321,6 +321,7 @@ const FeatureItem: React.FC<{
           fontSize: 18,
           color: colors.gray,
           fontWeight: 400,
+          textWrap: "balance",
         }}
       >
         {text}
@@ -519,6 +520,7 @@ export const Main: React.FC = () => {
                     color: colors.cyan,
                     marginTop: 20,
                     letterSpacing: "0.1em",
+                    textWrap: "balance",
                   }}
                   startFrom={TITLE_START + 20}
                   createTimeline={({ textRef, tl, SplitText }) => {
