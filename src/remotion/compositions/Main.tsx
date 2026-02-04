@@ -124,8 +124,10 @@ const NeonFrame: React.FC<{
   height: number;
   progress: number;
 }> = ({ width, height, progress }) => {
-  const padding = 20;
-  const cornerRadius = 16;
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const padding = 30;
+  const cornerRadius = 20;
 
   // Create a rectangle path with rounded corners
   const w = width + padding * 2;
@@ -145,6 +147,10 @@ const NeonFrame: React.FC<{
     Z
   `;
 
+  // Pulsing glow effect after frame is drawn
+  const pulseIntensity =
+    progress >= 1 ? 60 + Math.sin(frame / (fps * 0.5)) * 15 : 60;
+
   return (
     <div
       style={{
@@ -156,14 +162,19 @@ const NeonFrame: React.FC<{
         height: h,
       }}
     >
-      <Glow color={colors.neonRed} intensity={30} layers={3} decay={1.5}>
+      <Glow
+        color={colors.neonRed}
+        intensity={pulseIntensity}
+        layers={4}
+        decay={1.2}
+      >
         <TrimPath
           path={rectPath}
           start={0}
           end={progress}
           duration={2}
           stroke={colors.neonRed}
-          strokeWidth={3}
+          strokeWidth={4}
           viewBox={`0 0 ${w} ${h}`}
           width={w}
           height={h}
@@ -283,15 +294,15 @@ export const Main: React.FC = () => {
   const FEATURES_START = 130;
   const OUTRO_START = 240;
 
-  // Calculate neon frame progress
+  // Calculate neon frame progress (completes faster for full border visibility)
   const neonProgress = interpolate(
     frame,
-    [NEON_DRAW_START, NEON_DRAW_START + 60],
+    [NEON_DRAW_START, NEON_DRAW_START + 35],
     [0, 1],
     {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
-      easing: Easing.out(Easing.cubic),
+      easing: Easing.out(Easing.quad),
     },
   );
 
