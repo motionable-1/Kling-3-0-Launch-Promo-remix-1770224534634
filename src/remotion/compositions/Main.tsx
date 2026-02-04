@@ -151,27 +151,33 @@ const NeonFrame: React.FC<{
   width: number;
   height: number;
   progress: number;
-}> = ({ width, height, progress }) => {
+  borderRadius?: number;
+  strokeWidth?: number;
+}> = ({ width, height, progress, borderRadius = 16, strokeWidth = 4 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const padding = 30;
-  const cornerRadius = 20;
 
-  // Create a rectangle path with rounded corners
-  const w = width + padding * 2;
-  const h = height + padding * 2;
-  const r = cornerRadius;
+  // SVG strokes are centered on the path, so we draw the path at the center
+  // of where we want the stroke. For the stroke's INNER edge to align with
+  // the panel edge, we offset the path outward by half the stroke width.
+  const halfStroke = strokeWidth / 2;
+  const r = borderRadius + halfStroke;
 
+  // Total SVG size includes the stroke extending outward
+  const svgWidth = width + strokeWidth;
+  const svgHeight = height + strokeWidth;
+
+  // Path starts at halfStroke offset so inner edge of stroke aligns with panel
   const rectPath = `
-    M ${r} 0
-    L ${w - r} 0
-    Q ${w} 0, ${w} ${r}
-    L ${w} ${h - r}
-    Q ${w} ${h}, ${w - r} ${h}
-    L ${r} ${h}
-    Q 0 ${h}, 0 ${h - r}
-    L 0 ${r}
-    Q 0 0, ${r} 0
+    M ${r} ${halfStroke}
+    L ${svgWidth - r} ${halfStroke}
+    Q ${svgWidth - halfStroke} ${halfStroke}, ${svgWidth - halfStroke} ${r}
+    L ${svgWidth - halfStroke} ${svgHeight - r}
+    Q ${svgWidth - halfStroke} ${svgHeight - halfStroke}, ${svgWidth - r} ${svgHeight - halfStroke}
+    L ${r} ${svgHeight - halfStroke}
+    Q ${halfStroke} ${svgHeight - halfStroke}, ${halfStroke} ${svgHeight - r}
+    L ${halfStroke} ${r}
+    Q ${halfStroke} ${halfStroke}, ${r} ${halfStroke}
     Z
   `;
 
@@ -180,43 +186,38 @@ const NeonFrame: React.FC<{
     progress >= 1 ? 60 + Math.sin(frame / (fps * 0.5)) * 15 : 60;
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        left: "50%",
-        top: "50%",
-        transform: `translate(-50%, -50%)`,
-        width: w,
-        height: h,
-      }}
+    <Glow
+      color={colors.neonRed}
+      intensity={pulseIntensity}
+      layers={4}
+      decay={1.2}
     >
-      <Glow
-        color={colors.neonRed}
-        intensity={pulseIntensity}
-        layers={4}
-        decay={1.2}
-      >
-        <TrimPath
-          path={rectPath}
-          start={0}
-          end={progress}
-          duration={2}
-          stroke={colors.neonRed}
-          strokeWidth={4}
-          viewBox={`0 0 ${w} ${h}`}
-          width={w}
-          height={h}
-        />
-      </Glow>
-    </div>
+      <TrimPath
+        path={rectPath}
+        start={0}
+        end={progress}
+        duration={2}
+        stroke={colors.neonRed}
+        strokeWidth={strokeWidth}
+        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        width={svgWidth}
+        height={svgHeight}
+      />
+    </Glow>
   );
 };
 
+// ===== GLASS PANEL DIMENSIONS (shared for frame alignment) =====
+const PANEL_WIDTH = 520;
+const PANEL_HEIGHT = 320;
+const PANEL_BORDER_RADIUS = 16;
+
 // ===== GLASS PANEL COMPONENT =====
-const GlassPanel: React.FC<{ children: React.ReactNode; visible: boolean }> = ({
-  children,
-  visible,
-}) => {
+const GlassPanel: React.FC<{
+  children: React.ReactNode;
+  visible: boolean;
+  neonProgress: number;
+}> = ({ children, visible, neonProgress }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -240,10 +241,14 @@ const GlassPanel: React.FC<{ children: React.ReactNode; visible: boolean }> = ({
       <div
         style={{
           position: "relative",
-          padding: "60px 80px",
+          width: PANEL_WIDTH,
+          height: PANEL_HEIGHT,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           background: `linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)`,
           backdropFilter: "blur(20px)",
-          borderRadius: 16,
+          borderRadius: PANEL_BORDER_RADIUS,
           border: `1px solid rgba(255,255,255,0.1)`,
           boxShadow: `
             0 25px 50px -12px rgba(0,0,0,0.5),
@@ -252,6 +257,23 @@ const GlassPanel: React.FC<{ children: React.ReactNode; visible: boolean }> = ({
         }}
       >
         {children}
+      </div>
+
+      {/* Neon Frame - positioned to wrap around the glass panel */}
+      <div
+        style={{
+          position: "absolute",
+          top: -2, // Offset by half stroke width (4/2 = 2)
+          left: -2,
+          pointerEvents: "none",
+        }}
+      >
+        <NeonFrame
+          width={PANEL_WIDTH}
+          height={PANEL_HEIGHT}
+          progress={neonProgress}
+          borderRadius={PANEL_BORDER_RADIUS}
+        />
       </div>
     </div>
   );
@@ -407,7 +429,7 @@ export const Main: React.FC = () => {
           }}
         >
           {/* Glass Panel with Logo */}
-          <GlassPanel visible={panelVisible}>
+          <GlassPanel visible={panelVisible} neonProgress={neonProgress}>
             {/* Kling 3.0 Logo */}
             <div
               style={{
@@ -523,19 +545,6 @@ export const Main: React.FC = () => {
               </div>
             </div>
           </GlassPanel>
-
-          {/* Neon Frame around panel */}
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              pointerEvents: "none",
-            }}
-          >
-            <NeonFrame width={400} height={280} progress={neonProgress} />
-          </div>
 
           {/* Features Section */}
           <div
