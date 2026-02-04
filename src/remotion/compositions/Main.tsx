@@ -31,13 +31,23 @@ const colors = {
   darkGray: "#2B2D42",
 };
 
-// ===== SOUND EFFECTS =====
+// ===== SOUND EFFECTS (Custom Generated) =====
 const sfx = {
-  whoosh: "https://cdn.revid.ai/sound-effects/fast-whoosh.wav",
-  bellBoom: "https://cdn.revid.ai/sound-effects/bell-boom.wav",
-  fxSwipe: "https://cdn.revid.ai/sound-effects/fx-swipe.wav",
-  magicSlice: "https://cdn.revid.ai/sound-effects/magic-slice.wav",
-  pop: "https://cdn.revid.ai/sound-effects/pop.wav",
+  // Cinematic whoosh with digital glitch for logo reveal
+  whoosh:
+    "https://pub-e3bfc0083b0644b296a7080b21024c5f.r2.dev/mp3/1770223107851_xapaxbdmzb_sfx_cinematic_whoosh_with_digital_.sfx-cinematic-whoosh-with-digital-",
+  // Neon light powering on with electric buzz for frame draw
+  neonPowerOn:
+    "https://pub-e3bfc0083b0644b296a7080b21024c5f.r2.dev/mp3/1770223110510_ftq0kweovcq_sfx_neon_light_powering_on_with_el.sfx-neon-light-powering-on-with-el",
+  // Deep cinematic impact for title reveal
+  impact:
+    "https://pub-e3bfc0083b0644b296a7080b21024c5f.r2.dev/mp3/1770223113979_hyfb2qrmetp_sfx_deep_cinematic_impact_hit_with.sfx-deep-cinematic-impact-hit-with",
+  // Soft digital blip for feature items
+  blip:
+    "https://pub-e3bfc0083b0644b296a7080b21024c5f.r2.dev/mp3/1770223116736_fo614uvqs6v_sfx_soft_digital_blip_pop_notifica.sfx-soft-digital-blip-pop-notifica",
+  // Sleek tech slide for API badge
+  slideIn:
+    "https://pub-e3bfc0083b0644b296a7080b21024c5f.r2.dev/mp3/1770223119986_hldviu79c0e_sfx_sleek_tech_slide_in_sound_with.sfx-sleek-tech-slide-in-sound-with",
 };
 
 // ===== FLOATING PARTICLES COMPONENT =====
